@@ -1,33 +1,38 @@
-version: '3'
+version: '3.1'
 services:
-    php:
-        # image: 'php:7.2-fpm'
-        build:
-            context: ./docker
-            dockerfile: php.Dockerfile
-        container_name: ${APP_NAME:?err}-php
-        volumes:
-            - './app:/var/www/html'
-        depends_on:
-            - mariadb
+  nginx:
+    image: nginx:latest
+    container_name: ${APP_NAME:?err}-nginx
+    ports:
+      - ${WWW_PORT}:80
+    volumes:
+      - ${WWW_VOLUME}:/var/www/html'
+    networks:
+      - front-tier
+      - back-tier
+    depends_on:
+      - php
+  
+  php:
+  # image: 'php:8.1-fpm'
+    build:
+      context: ./docker
+      dockerfile: php.Dockerfile
+    container_name: ${APP_NAME:?err}-php
+    volumes:
+      - ${WWW_VOLUME}:/var/www/html
+      - ${WWW_CONFIG}:/etc/nginx/nginx.conf
+    environment:
+      DB_HOST: ${MYSQL_HOST}
+      DB_NAME: ${MYSQL_DB_NAME}
+      DB_USER: ${MYSQL_USER}
+      DB_PASS: ${MYSQL_PASSWORD}
+      PROD   : 'true'
+    networks:
+      - back-tier
+    restart: always
 
-    nginx:
-        image: nginx:latest
-        container_name: ${APP_NAME:?err}-nginx
-        ports:
-            - '80:80'
-            - '443:443'
-        links:
-            - 'php'
-        volumes:
-            - './app:/var/www/html'
-            - './config/nginx:/etc/nginx/conf.d'
-
-    mariadb:
-        image: mariadb:10.3.9
-        container_name: ${APP_NAME:?err}-mariadb
-        restart: 'on-failure'
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?err}
-        volumes:
-            - ${PWD}
+networks:
+  # The presence of these objects is sufficient to define them
+  front-tier: {}
+  back-tier: {}
