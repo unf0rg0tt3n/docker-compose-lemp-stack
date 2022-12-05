@@ -5,6 +5,3 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql curl gettext
 RUN docker-php-ext-configure intl 
 RUN docker-php-ext-install intl 
 RUN docker-php-ext-enable mysqli
-
-RUN curl --silent --show-error https://getcomposer.org/installer | php && \
-    mv composer.phar /usr/local/bin/composer
