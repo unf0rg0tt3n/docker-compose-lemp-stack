@@ -1,6 +1,6 @@
 # Docker Compose LEP Stack
 
-This repository contains a little `docker-compose` configuration to start a `LEMP (Linux, Nginx, MariaDB, PHP)` stack.
+This repository contains a little `docker-compose` configuration to start a `LEP (Linux, Nginx, PHP)` stack.
 
 ## Details
 
