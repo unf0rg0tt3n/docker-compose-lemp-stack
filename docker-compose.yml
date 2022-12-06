@@ -6,7 +6,7 @@ services:
     ports:
       - ${WWW_PORT}:80
     volumes:
-      - ${WWW_VOLUME}:/var/www/html'
+      - ${WWW_VOLUME}:/var/www/html
     networks:
       - front-tier
       - back-tier
@@ -21,7 +21,7 @@ services:
     container_name: ${APP_NAME:?err}-php
     volumes:
       - ${WWW_VOLUME}:/var/www/html
-      - ${WWW_CONFIG}:/etc/nginx/nginx.conf
+      - ${WWW_CONFIG}/nginx.conf:/etc/nginx/nginx.conf
     environment:
       DB_HOST: ${MYSQL_HOST}
       DB_NAME: ${MYSQL_DB_NAME}
